@@ -1,0 +1,140 @@
+# =====================================
+# FICHIER .GITIGNORE
+# =====================================
+
+# .gitignore
+
+# ===== DOCKER & ENVIRONNEMENT =====
+# Fichiers d'environnement sensibles
+.env
+.env.local
+.env.production
+.env.staging
+
+# Volumes Docker persistants
+docker-volumes/
+postgres_data/
+
+# Logs Docker
+*.log
+logs/
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+# ===== ÉDITEURS & IDE =====
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+
+# ===== JAVASCRIPT & NODE =====
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.node_repl_history
+*.tgz
+*.tar.gz
+
+# Package managers
+package-lock.json
+yarn.lock
+
+# ===== FICHIERS DE SAUVEGARDE =====
+# Sauvegardes base de données
+*.sql
+*.dump
+backup_*.sql
+db_backup_*
+
+# Fichiers de sauvegarde génériques
+*.bak
+*.backup
+*.tmp
+*.temp
+*.old
+*.orig
+
+# ===== UPLOADS & MÉDIAS =====
+# Dossiers d'uploads utilisateur
+uploads/
+media/user-uploads/
+temp-uploads/
+
+# Fichiers volumineux
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+
+# ===== CACHE & TEMPORAIRES =====
+# Cache PHP
+cache/
+tmp/
+temp/
+
+# Sessions PHP
+sessions/
+
+# Cache navigateur
+.cache/
+
+# ===== SÉCURITÉ =====
+# Clés privées
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Certificats
+*.crt
+*.cer
+
+# Fichiers de configuration sensibles
+config/database.local.php
+config/secrets.php
+.htpasswd
+
+# ===== TESTS & DOCUMENTATION =====
+# Tests
+coverage/
+.phpunit.result.cache
+tests/_output/
+
+# Documentation générée
+docs/build/
+docs/_build/
+
+# ===== DIVERS =====
+# Fichiers de verrouillage
+*.lock
+
+# Fichiers temporaires de l'éditeur
+*.swp
+*.swo
+*.tmp
+
+# Fichiers de configuration personnels
+.personal-config
+local.config.php
+
+# Dossier de développement local
+local/
+dev/
+
+# ===== PRODUCTION =====
+# Fichiers de production spécifiques
+production.config.php
+.env.production

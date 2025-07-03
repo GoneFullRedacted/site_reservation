@@ -1,0 +1,12 @@
+# =====================================
+# FICHIER .DOCKERIGNORE
+# =====================================
+
+# .dockerignore
+.git
+.gitignore
+README.md
+.env
+.DS_Store
+node_modules
+*.log

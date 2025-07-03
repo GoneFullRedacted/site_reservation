@@ -1,0 +1,65 @@
+# =====================================
+# DOCKER-COMPOSE.YML - ORCHESTRATION
+# =====================================
+
+# docker-compose.yml
+version: '3.8'
+
+services:
+  # Service Web (Apache + PHP)
+  web:
+    build: .
+    container_name: reservation_web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./apache-config:/etc/apache2/sites-available
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_NAME=reservation_db
+      - DB_USER=reservation_user
+      - DB_PASSWORD=secure_password
+    networks:
+      - reservation_network
+
+  # Service Base de données PostgreSQL
+  db:
+    image: postgres:15
+    container_name: reservation_db
+    environment:
+      POSTGRES_DB: reservation_db
+      POSTGRES_USER: reservation_user
+      POSTGRES_PASSWORD: secure_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - reservation_network
+
+  # Service PHPMyAdmin-like pour PostgreSQL (pgAdmin)
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: reservation_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    networks:
+      - reservation_network
+
+# Volumes persistants
+volumes:
+  postgres_data:
+
+# Réseau custom
+networks:
+  reservation_network:
+    driver: bridge
