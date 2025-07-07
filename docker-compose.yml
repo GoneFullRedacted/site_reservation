@@ -1,8 +1,4 @@
-# =====================================
-# DOCKER-COMPOSE.YML - ORCHESTRATION
-# =====================================
-
-# docker-compose.yml
+---
 version: '3.8'
 
 services:
@@ -16,9 +12,10 @@ services:
       - ./src:/var/www/html
       - ./apache-config:/etc/apache2/sites-available
     depends_on:
-      - db
+      db:
+        condition: service_healthy # Le service web attend que la DB soit saine
     environment:
-      - DB_HOST=db
+      - DB_HOST=db # Le nom du service DB est bien 'db'
       - DB_NAME=reservation_db
       - DB_USER=reservation_user
       - DB_PASSWORD=secure_password
@@ -26,13 +23,13 @@ services:
       - reservation_network
 
   # Service Base de données PostgreSQL
-  db:
+  db: # <--- Le nom du service est 'db'
     image: postgres:15
-    container_name: reservation_db
+    container_name: reservation_db # Nom du conteneur Docker
     environment:
       POSTGRES_DB: reservation_db
       POSTGRES_USER: reservation_user
-      POSTGRES_PASSWORD: secure_password
+      POSTGRES_PASSWORD: secure_password # Pensez à un mot de passe plus fort pour la production !
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -40,6 +37,12 @@ services:
       - "5432:5432"
     networks:
       - reservation_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reservation_user -d reservation_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   # Service PHPMyAdmin-like pour PostgreSQL (pgAdmin)
   pgadmin:
@@ -47,17 +50,23 @@ services:
     container_name: reservation_pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_PASSWORD: admin # Pensez à un mot de passe plus fort pour la production !
+    volumes:
+      - ./pgadmin-config/servers.json:/pgadmin4/servers.d/servers.json:ro
+      - ./pgadmin-config/pgpass:/pgadmin4/servers.d/pgpass:ro
+      - pgadmin_data:/var/lib/pgadmin
     ports:
       - "8081:80"
     depends_on:
-      - db
+      db: # <--- Le nom du service DB est bien 'db'
+        condition: service_healthy
     networks:
       - reservation_network
 
 # Volumes persistants
 volumes:
   postgres_data:
+  pgadmin_data:
 
 # Réseau custom
 networks:
